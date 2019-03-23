@@ -1,15 +1,25 @@
 #webscraper
-
+from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 
+
+
 #grabs page
-url =  requests.get('https://finviz.com/screener.ashx?v=111&f=sh_price_o5,ta_perf_1wup&ft=3&o=company').text
+url =  "https://google.com"
+browser = webdriver.Firefox()
+browser.get(url)
 
-#xml parsing
-soup = BeautifulSoup(url, 'lxml')
+# import time
+# time.sleep(10)
 
-#finds all ticker 
-ticker = soup.find_all('td', class_='screener-body-table-nw')
+# html = browser.page_source
 
-print(ticker)
+# #xml parsing
+# soup = BeautifulSoup(html, 'html.parser')
+
+
+# #finds all ticker 
+# ticker = soup.find_all('td', class_='screener-body-table-nw')
+
+# print(ticker)
