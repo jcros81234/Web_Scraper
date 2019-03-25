@@ -9,14 +9,15 @@ import requests
 
 
 #grabs page
-url =  "https://finviz.com/screener.ashx?v=112&f=sh_price_o5,ta_perf_1wup&ft=3&o=company"
-browser = webdriver.Firefox()
-browser.get(url)
+url =  requests.get("https://finviz.com/screener.ashx?v=112&f=sh_price_o5,ta_perf_1wup&ft=3&o=company").text
+
+# browser = webdriver.Firefox()
+# browser.get(url)
 
 
-WebDriverWait(browser, 10).until(EC.invisibility_of_element_located((By.XPATH,"//div [@class='gray4056']")))
-elm = browser.find_element_by_class_name('screener-link-primary')
-elm.click()
+# WebDriverWait(browser, 10).until(EC.invisibility_of_element_located((By.XPATH,"//div [@class='gray4056']")))
+# elm = browser.find_element_by_class_name('screener-link-primary')
+# elm.click()
 
 
 # import time
@@ -25,9 +26,8 @@ elm.click()
 # html = browser.page_source
 
 # #xml parsing
-# soup = BeautifulSoup(html, 'html.parser')
+soup = BeautifulSoup(url, 'lxml')
 
 # #finds all ticker 
-# ticker = soup.find_all('td', class_='screener-body-table-nw')
-
-# print(ticker)
+for el in soup.find_all('a', class_='screener-link-primary'):
+	print el.get_text()
