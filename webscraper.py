@@ -1,33 +1,50 @@
-#webscraper
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+# webscraper
+
 from bs4 import BeautifulSoup
 import requests
+import time
 
+url =  "https://finviz.com/screener.ashx?v=112&f=sh_price_o5,ta_perf_1wup&ft=3&o=company"
 
+hasNextPage = True
+firstPage = True
+currentPageIndex = 0
+charIndex = 0
 
-#grabs page
-url =  requests.get("https://finviz.com/screener.ashx?v=112&f=sh_price_o5,ta_perf_1wup&ft=3&o=company").text
+while hasNextPage:
+	if not firstPage:
+		url += "&r=" + str(currentPageIndex)
+		charIndex = -3 - len(str(currentPageIndex))
+	# grabs page
+	page = requests.get(url).text
+	print url
 
-# browser = webdriver.Firefox()
-# browser.get(url)
+	# parser
+	soup = BeautifulSoup(page,'html.parser')
 
+	# finds all ticker and prints
+	counter = 0
+	for el in soup.find_all('a', class_='screener-link-primary'):
+		counter += 1
+		print el.get_text()
 
-# WebDriverWait(browser, 10).until(EC.invisibility_of_element_located((By.XPATH,"//div [@class='gray4056']")))
-# elm = browser.find_element_by_class_name('screener-link-primary')
-# elm.click()
+	#resets url to original state if past first page
+	if not firstPage:
+		url = url[:charIndex]
 
+	# toggle flag such that firstPage will be false after first run
+	firstPage = False
 
-# import time
-# time.sleep(10)
+    # advance to next page url
+	if currentPageIndex == 0:
+		currentPageIndex += 21
+	else:
+		currentPageIndex += 20
+    # 20 is number of stocks per page
+    # Less than 20 means final page
 
-# html = browser.page_source
+	if counter < 20:
+		hasNextPage = False
 
-# #xml parsing
-soup = BeautifulSoup(url, 'lxml')
-
-# #finds all ticker 
-for el in soup.find_all('a', class_='screener-link-primary'):
-	print el.get_text()
+	#wait 5 seconds before making next request
+	time.sleep(5)
