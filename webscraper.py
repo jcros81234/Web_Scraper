@@ -1,11 +1,11 @@
 # webscraper
-#demos
 
 from bs4 import BeautifulSoup
 import requests
 import time
 
-url =  "https://finviz.com/screener.ashx?v=112&f=sh_price_o5,ta_perf_1wup&ft=3&o=company"
+startTime = time.time()
+url =  "https://finviz.com/screener.ashx?v=111&f=cap_midover,ta_pattern_wedgedown,ta_sma20_cross50a,ta_sma200_pa&ft=4"
 
 hasNextPage = True
 firstPage = True
@@ -18,7 +18,6 @@ while hasNextPage:
 		charIndex = -3 - len(str(currentPageIndex))
 	# grabs page
 	page = requests.get(url).text
-	print url
 
 	# parser
 	soup = BeautifulSoup(page,'html.parser')
@@ -49,3 +48,6 @@ while hasNextPage:
 
 	#wait 5 seconds before making next request
 	time.sleep(5)
+endTime = time.time()
+
+print("Run Time", endTime - startTime)
